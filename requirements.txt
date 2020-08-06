@@ -1,0 +1,8 @@
+lottie
+pytube3
+pdf2image
+pillow
+moviepy
+cairosvg
+python-telegram-bot
+
