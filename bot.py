@@ -271,6 +271,7 @@ def ytmp3_start(update, context):
 	clip.audio.write_audiofile(f'videoyt.mp3')
 	context.bot.send_document(chat_id=update.effective_chat.id, document = open("videoyt.mp3", 'rb'), caption=f"{video.title}", thumb="thumbnail.jpg")
 	os.remove(f"videoyt.mp4")
+	os.remove(f"videoyt.mp3")
 	os.remove('thumbnail.jpg')
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
 	start(update,context)
@@ -313,7 +314,7 @@ def end(update, context):
     query = update.callback_query
     query.answer()
     query.edit_message_text(
-        text="See you next time! *Windows xp shutdown sound*"
+        text="See you next time, when you'll type /start *Windows xp shutdown sound*"
     )
     return ConversationHandler.END
 
