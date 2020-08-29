@@ -112,6 +112,7 @@ def sticker_start(update, context):
 				context.bot.send_document(chat_id=update.message.chat_id, document = open('sticker.png', 'rb'), timeout = 1000)
 				os.remove('sticker.png')
 			context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
+			dp.delete_handler(MessageHandler(Filters.sticker,sticker_start))
 			start(update,context)
 			
 
@@ -139,6 +140,7 @@ def voice_start(update, context):
 	context.bot.send_document(chat_id=update.message.chat_id, document = open('voice.mp3', 'rb'), timeout = 1000)
 	os.remove('voice.mp3')
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
+	dp.delete_handler(MessageHandler(Filters.voice,voice_start))
 	start(update,context)
 def video(update, context):
     """Show new choice of buttons"""
@@ -168,6 +170,7 @@ def video_start(update, context):
 	os.remove('video.mp3')
 	os.remove('video.mp4')
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
+	dp.delete_handler(MessageHandler(Filters.video, video_start))
 	start(update,context)
 
 def videonote(update, context):
@@ -193,6 +196,7 @@ def videonote_start(update, context):
 	videonote_file.download('video.mp4')
 	context.bot.send_document(chat_id=update.message.chat_id, document = open('video.mp4', 'rb'), timeout = 1000)
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
+	dp.delete_handler(MessageHandler(Filters.video_note, videonote_start))
 	start(update,context)
 
 def yt(update, context):
@@ -237,6 +241,7 @@ def yt_start(update, context):
 		os.remove('thumbnail.jpg')
 
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
+	dp.delete_handler(MessageHandler(Filters.text, yt_start))
 	start(update,context)
 
 def ytmp3(update, context):
@@ -274,6 +279,7 @@ def ytmp3_start(update, context):
 	os.remove(f"videoyt.mp3")
 	os.remove('thumbnail.jpg')
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
+	dp.delete_handler(MessageHandler(Filters.text, ytmp3_start))
 	start(update,context)
 
 def pdf_jpg(update, context):
@@ -305,6 +311,7 @@ def pdf_jpg_start(update, context):
 	rmtree("/home/ober0n/files")
 	os.remove(f"/home/ober0n/file.pdf")
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
+	dp.delete_handler(MessageHandler(Filters.document.mime_type("application/pdf"), pdf_jpg_start))
 	start(update,context)
 	return FIRST
 
