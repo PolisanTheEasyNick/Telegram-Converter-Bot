@@ -85,10 +85,13 @@ def stickers(update, context):
         text="You picked stickers section. Send sticker or press a button to go back. Note: Animated .gif from stickers may be buggy.",
         reply_markup=reply_markup
     )
-    dp.add_handler(MessageHandler(Filters.sticker,sticker_start))
+    global hand
+    hand = MessageHandler(Filters.sticker,sticker_start)
+    dp.add_handler(hand)
     return FIRST
 
 def sticker_start(update, context):
+
 			context.bot.send_message(chat_id=update.effective_chat.id, text="sticker!")
 			stick = context.bot.getFile(update.message.sticker.file_id)
 			if update.message.sticker.is_animated:
@@ -105,16 +108,15 @@ def sticker_start(update, context):
 				context.bot.send_message(chat_id=update.effective_chat.id, text="Uploading...")
 				context.bot.send_document(chat_id=update.message.chat_id, document = result, timeout = 1000)
 				os.remove('sticker.tgs')
-				os.remove('animation.gif')
 			else:
 				context.bot.send_message(chat_id=update.effective_chat.id, text="Progressing sticker...")
 				stick.download("sticker.png")
 				context.bot.send_document(chat_id=update.message.chat_id, document = open('sticker.png', 'rb'), timeout = 1000)
 				os.remove('sticker.png')
 			context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
-			dp.delete_handler(MessageHandler(Filters.sticker,sticker_start))
 			start(update,context)
-			
+			global hand
+			dp.remove_handler(hand)
 
 def voice(update, context):
     """Show new choice of buttons"""
@@ -129,7 +131,9 @@ def voice(update, context):
         text="You picked voice section. Send voice message or press a button to go back",
         reply_markup=reply_markup
     )
-    dp.add_handler(MessageHandler(Filters.voice,voice_start))
+    global hand
+    hand = MessageHandler(Filters.voice,voice_start)
+    dp.add_handler(hand)
 
     return FIRST
 
@@ -139,8 +143,9 @@ def voice_start(update, context):
 	voice_file.download('voice.mp3')
 	context.bot.send_document(chat_id=update.message.chat_id, document = open('voice.mp3', 'rb'), timeout = 1000)
 	os.remove('voice.mp3')
+	global hand
+	dp.remove_handler(hand)
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
-	dp.delete_handler(MessageHandler(Filters.voice,voice_start))
 	start(update,context)
 def video(update, context):
     """Show new choice of buttons"""
@@ -155,7 +160,9 @@ def video(update, context):
         text="You picked video section. Send video message to convert to mp3 or press a button to go back",
         reply_markup=reply_markup
     )
-    dp.add_handler(MessageHandler(Filters.video, video_start))
+    global hand
+    hand = MessageHandler(Filters.video, video_start)
+    dp.add_handler(hand)
 
     return FIRST
 
@@ -169,8 +176,9 @@ def video_start(update, context):
 	context.bot.send_document(chat_id=update.message.chat_id, document = open('video.mp3', 'rb'), timeout = 1000)
 	os.remove('video.mp3')
 	os.remove('video.mp4')
+	global hand
+	dp.remove_handler(hand)
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
-	dp.delete_handler(MessageHandler(Filters.video, video_start))
 	start(update,context)
 
 def videonote(update, context):
@@ -186,7 +194,9 @@ def videonote(update, context):
         text="You picked video_note section. Send video message in circle to convert to mp4 or press a button to go back",
         reply_markup=reply_markup
     )
-    dp.add_handler(MessageHandler(Filters.video_note, videonote_start))
+    global hand
+    hand = MessageHandler(Filters.video_note, videonote_start)
+    dp.add_handler(hand)
 
     return FIRST
 
@@ -195,8 +205,9 @@ def videonote_start(update, context):
 	context.bot.send_message(chat_id=update.effective_chat.id, text="Downloading...")
 	videonote_file.download('video.mp4')
 	context.bot.send_document(chat_id=update.message.chat_id, document = open('video.mp4', 'rb'), timeout = 1000)
+	global hand
+	dp.remove_handler(hand)
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
-	dp.delete_handler(MessageHandler(Filters.video_note, videonote_start))
 	start(update,context)
 
 def yt(update, context):
@@ -212,7 +223,9 @@ def yt(update, context):
         text="You picked Youtube Download section. Send message with link to download or press a button to go back. May not download all videos.",
         reply_markup=reply_markup
     )
-    dp.add_handler(MessageHandler(Filters.text, yt_start))
+    global hand
+    hand = MessageHandler(Filters.text, yt_start)
+    dp.add_handler(hand)
 
     return FIRST
 
@@ -239,9 +252,9 @@ def yt_start(update, context):
 		context.bot.send_document(chat_id=update.effective_chat.id, document = open("videoyt.mp4", 'rb'), caption=f"{video.title}", thumb="thumbnail.jpg")
 		os.remove(f"videoyt.mp4")
 		os.remove('thumbnail.jpg')
-
+	global hand
+	dp.remove_handler(hand)
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
-	dp.delete_handler(MessageHandler(Filters.text, yt_start))
 	start(update,context)
 
 def ytmp3(update, context):
@@ -257,7 +270,9 @@ def ytmp3(update, context):
         text="You picked Youtube Download to mp3 section. Send message with link to download and convert to mp3 or press a button to go back. May not download all videos.",
         reply_markup=reply_markup
     )
-    dp.add_handler(MessageHandler(Filters.text, ytmp3_start))
+    global hand
+    hand = MessageHandler(Filters.text, ytmp3_start)
+    dp.add_handler(hand)
 
     return FIRST
 
@@ -276,10 +291,10 @@ def ytmp3_start(update, context):
 	clip.audio.write_audiofile(f'videoyt.mp3')
 	context.bot.send_document(chat_id=update.effective_chat.id, document = open("videoyt.mp3", 'rb'), caption=f"{video.title}", thumb="thumbnail.jpg")
 	os.remove(f"videoyt.mp4")
-	os.remove(f"videoyt.mp3")
 	os.remove('thumbnail.jpg')
+	global hand
+	dp.remove_handler(hand)
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
-	dp.delete_handler(MessageHandler(Filters.text, ytmp3_start))
 	start(update,context)
 
 def pdf_jpg(update, context):
@@ -295,8 +310,9 @@ def pdf_jpg(update, context):
         text="You picked PDF to JPEG section. Send PDF file to convert to JPEGs or press a button to go back",
         reply_markup=reply_markup
     )
-    dp.add_handler(MessageHandler(Filters.document.mime_type("application/pdf"), pdf_jpg_start))
-
+    global hand
+    hand = MessageHandler(Filters.document.mime_type("application/pdf"), pdf_jpg_start)
+    dp.add_handler(hand)
     return FIRST
 
 def pdf_jpg_start(update, context):
@@ -305,13 +321,16 @@ def pdf_jpg_start(update, context):
 	pdf_file.download('/home/ober0n/file.pdf') 
 	if os.path.isdir("/home/ober0n/files") is False:
 		os.mkdir("/home/ober0n/files")
+	context.bot.send_message(chat_id=update.effective_chat.id, text="Converting...")
 	images_from_path = convert_from_path('/home/ober0n/file.pdf', output_folder='/home/ober0n/files/', fmt='png')
+	context.bot.send_message(chat_id=update.effective_chat.id, text="Sending...")
 	for filename in os.listdir("/home/ober0n/files"):
 		context.bot.send_document(chat_id=update.message.chat_id, document = open('/home/ober0n/files/' + filename, 'rb'), timeout = 1000)
 	rmtree("/home/ober0n/files")
 	os.remove(f"/home/ober0n/file.pdf")
 	context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
-	dp.delete_handler(MessageHandler(Filters.document.mime_type("application/pdf"), pdf_jpg_start))
+	global hand
+	dp.remove_handler(hand)
 	start(update,context)
 	return FIRST
 
@@ -321,7 +340,7 @@ def end(update, context):
     query = update.callback_query
     query.answer()
     query.edit_message_text(
-        text="See you next time, when you'll type /start *Windows xp shutdown sound*"
+        text="See you next time! *Windows xp shutdown sound*"
     )
     return ConversationHandler.END
 
