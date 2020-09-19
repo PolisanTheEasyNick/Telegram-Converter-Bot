@@ -114,9 +114,9 @@ def sticker_start(update, context):
 				context.bot.send_document(chat_id=update.message.chat_id, document = open('sticker.png', 'rb'), timeout = 1000)
 				os.remove('sticker.png')
 			context.bot.delete_message(chat_id=update.effective_chat.id, message_id=msg_id)
-			start(update,context)
 			global hand
 			dp.remove_handler(hand)
+			start(update,context)
 
 def voice(update, context):
     """Show new choice of buttons"""
